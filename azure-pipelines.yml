@@ -1,0 +1,29 @@
+trigger: none
+
+pool: bipinpool
+
+stages:
+- stage: initplanapply
+  jobs:
+  - job: initplanapply
+    steps:
+    - task: TerraformTaskV4@4
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        backendServiceArm: 'new-sc-bk'
+        backendAzureRmResourceGroupName: 'dev-rg1'
+        backendAzureRmStorageAccountName: 'devstgacbk01'
+        backendAzureRmContainerName: 'devcont'
+        backendAzureRmKey: 'newbk.terraform.tfstate'
+    - task: TerraformTaskV4@4
+      inputs:
+        provider: 'azurerm'
+        command: 'plan'
+        environmentServiceNameAzureRM: 'new-sc-bk'
+    - task: TerraformTaskV4@4
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        environmentServiceNameAzureRM: 'new-sc-bk'
+  
